@@ -1,102 +1,139 @@
-# Caderno de Aulas de laboratório MC921 - Construção de Compiladores
+# MC921 -- Compiler Construction.
 
-## O que será necessário para utilizar o caderno:
+The goal of the practical part of this course is to write a complete compiler
+for uC (micro C) Language, designed exclusively for this purpose. uC has the
+essential features of a realistic programming language, but is small and simple
+enough that it can be implemented in a few thousand lines of code. We chose the
+Python programming language for this task because it has clear and direct syntax
+and allows for rapid prototyping. In addition, we will have at our disposal a
+wonderful combination of tools and code in Python that make compilers so cool.
 
-Vocês vão precisar ter acesso a uma aplicação chamada "Terminal".
-Talvez seja a aplicação mais útil, porque vocês poderão usar o mesmo para
-dizer ao seu computador que faça praticamente tudo o que vocês quiserem.
-Usuários de Mac e Linux provavelmente estão familiarizados com este
-aplicativo. No Windows isso é um pouco mais complicado, já que a Microsoft é
-um tanto rebelde. Vocês podem instalar um emulador de terminal mais amigável
-do que o "Prompt de Comando" ou mesmo o "PowerShell" que acompanham o
-Windows. Eu sugiro instalar o [Git Bash](https://git-scm.com/downloads).
-Durante a instalação, certifique-se de selecionar a opção "Use Windows'
-default console window". Uma outra opção, recomendado principalmente para
-quem quer iniciar no mundo Linux, é instalar o Shell Bash do Linux no Windows
-através do subsistema Windows para o Linux, presente nas versões mais atuais
-do Windows 10.
-[Aqui](http://www.techtudo.com.br/dicas-e-tutoriais/noticia/2016/04/como-instalar-e-usar-o-shell-bash-do-linux-no-windows-10.html)
-vocês encontrarão um dos muitos tutoriais de como fazer isto.
+<div style="text-align: right">C is not a “very high level” language, nor a “big” one, and is not specialized to any particular area of application.<br/>
+But its absence of restrictions and its generality make it more convenient and effective for many tasks than supposedly more powerful languages."</div>
+<div style="text-align: right">-- Kernighan and Ritchie</div>
 
-Para criar um programa, utilizamos um editor de texto para escrever o código
-do programa (e.g., [Vim](http://www.vim.org/), [Atom](https://atom.io/)) ou
-um IDE -- Ambiente de Desenvolvimento Integrado (e.g.,
-[PyCharm](https://www.jetbrains.com/pycharm/),
-[WingIDE](http://wingware.com/)) e um compilador/interpretador python. O
-compilador é o que transforma o código em um programa executável.  O
-interpretador é um programa que executa diretamente os comandos da linguagem.
-Será preciso instalar o compilador/interpretador python da versão 3.  Vocês
-poderão baixá-lo do site (https://www.python.org/downloads)
+While you don’t need to be a Python wizard to complete the task, you should feel
+comfortable working with the language, and in particular should know how to
+program with classes. If you’d like a Python refresher, there are a bunch of
+useful links on the website to help you get up to speed.  I hope that the use of
+Python in this task doesn’t deter you from taking it.
 
-## Jupyter Notebook
+This task will revolve around several programming projects that taken together
+form a complete working compiler. You will learn how to put into practice the
+techniques presented in the theoretical part of this course and will study most
+of the details involved in the implementation of a "real" compiler.
 
-Um dos avanços mais significativos na arena de computação científica está em
-andamento com a explosão de interesse na tecnologia [Jupyter Notebook](jupyter.org).
-A publicação científica Nature apresentou recentemente um
-artigo sobre os benefícios dos notebooks Jupyter para pesquisas científicas.
-Jupyter Notebook nada mais é do que uma aplicação WEB de código aberto que
-permite criar e compartilhar documentos que contenham código, equações,
-visualizações e texto narrativo.
+## First Project: Lexer
 
-Depois de fazer o clone (recomendado, mais informações
-[aqui](https://tableless.com.br/tudo-que-voce-queria-saber-sobre-git-e-github-mas-tinha-vergonha-de-perguntar/)
-ou [aqui](http://rogerdudler.github.io/git-guide/index.pt_BR.html)) ou o
-download do caderno de aulas em uma pasta local, vocês precisarão instalar o
-Jupyter Notebook e algumas extensões para poder usar o material do curso. Com o
-Python3 já instalado na sua máquina, execute no terminal:
+The first project requires you to implement a scanner for the uC language,
+specified by [uC BNF Grammar](./doc/uC_Grammar.ipynb) notebook. Study the
+specification of uC grammar carefully. To complete this first project, you will
+use the [PLY](http://www.dabeaz.com/ply/), a Python version of the
+[lex/yacc](http://dinosaur.compilertools.net/) toolset with same functionality
+but with a friendlier interface. Details about this project are in the
+[First Project](./P1-Lexer.ipynb) notebook.
 
-  - obs.: Se vc tem somente o python3 instalado em sua máquina, o comando `pip3` pode
-não existir. Neste caso, digite apenas `pip`.
+## Second Project: Parser
 
-```sh
-    $ pip3 install jupyter
-    $ pip3 install jupyter_contrib_nbextensions
-    $ pip3 install tutormagic
-    $ jupyter contrib nbextension install --user
-```
+The second project requires you to implement a Parser (note that the Abstract
+Syntax Tree will be built only in the third project) for the uC language.
+To complete this second project, you will also use the [PLY](http://www.dabeaz.com/ply/),
+a Python version of the [lex/yacc](http://dinosaur.compilertools.net/) toolset
+with same functionality but with a friendlier interface. Details about this
+project are in the [Second Project](./P2-Parser.ipynb) notebook.
 
-Para usar as extensões necessárias, você também precisará ativá-las. Para fazer
-isso, você pode usar um subcomando Jupyter:
+## Third Project: AST
 
-```sh
-    $ jupyter nbextension enable codefolding/main
-    $ jupyter nbextension enable latex_envs/latex_envs
-    $ jupyter nbextension enable python-markdown/main
-    $ jupyter nbextension enable toc2/main
-```
+Abstract syntax trees are data structures that better represent the structure of
+the program code than the parse tree. An AST can be edited and enhanced with
+information such as properties and annotations for each element it contains.
+Your goal in this third project is to transform the parse tree into an AST.
+Details about this project are in the [Third Project](./P3-AST.ipynb) notebook.
 
-Depois de instalar o Jupyter Notebook e as extensões em seu computador, você
-está pronto para executar o servidor do notebook. Você pode iniciar o servidor
-do notebook a partir da linha de comando. Usando o aplicativo Terminal no Mac/Linux ou
-prompt de comando no Windows, vá para a pasta onde você baixou o caderno de aulas e execute:
+## Fourth Project: Semantic Analysis
 
-```sh
-    $ jupyter notebook
-```
+Once syntax trees are built, additional analysis can be done by evaluating
+attributes on tree nodes to gather necessary semantic information from the
+source code not easily detected during parsing. It usually includes type
+checking, and symbol table construction. Details about this project are in the
+[Fourth Project](./P4-Semantic.ipynb) notebook.
 
-Isso imprimirá algumas informações sobre o servidor do notebook em seu
-terminal, incluindo o URL do aplicativo da Web (por padrão,
-http://localhost:8888) bem como a forma de encerrar o aplicativo:
+## Fifth Project: Code Generation
 
-```sh
-    $ jupyter notebook,
-    [I 10:31:03.540 NotebookApp] Serving notebooks from local directory: /Users/marcio/Unicamp/MC102/Python/lectures,
-    [I 10:31:03.541 NotebookApp] 0 active kernels,
-    [I 10:31:03.541 NotebookApp] The Jupyter Notebook is running at:,
-    [I 10:31:03.541 NotebookApp] http://localhost:8888/?token=046cfa3064f0b118f56f6ef8859c4ab68d1d202d79445759,
-    [I 10:31:03.541 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
-```
+Once semantic analysis are done, we can walk through the decorated AST to
+generate a linear N-address code, analogously to [LLVM IR](https://llvm.org/docs/index.html).
+We call this intermediate machine code as uCIR. So, in this fifth project, you
+will turn the AST into uCIR. uCIR uses a Single Static Assignment (SSA), and can
+promote stack allocated scalars to virtual registers and remove the load and
+store operations, allowing better optimizations since values propagate directly
+to their use sites.  The main thing that distinguishes SSA from a conventional
+three-address code is that all assignments in SSA are for distinguished name
+variables.
 
-Em seguida, jupyter abrirá seu navegador da Web padrão para esta URL. Quando o notebook
-abrir no seu navegador, você verá o Notebook Dashboard, que mostrará uma lista
-dos cadernos no diretório onde o servidor do notebook foi iniciado. Na maioria das vezes,
-você deseja iniciar pelo caderno Practical Asects of Compiler Construction.  Muitas vezes,
-este será o seu caderno inicial.
+Once you've got your compiler emitting intermediate code, you should be able to
+use a simple interpreter, provided for this purpose, that runs the code.  This
+can be useful for testing, and other tasks involving the generated code. Details
+about this project are in the [Fifth Project](./P5-CodeGeneration.ipynb)
+notebook.
 
+## Sixth Project: Data Flow Analysis & Optimization
 
-## Extras
+In this sixth project, you will do some analysis and optimizations in uCIR.
+First, you will implement the Reaching Definitions Analysis followed by the
+Constant Propagation Optimization. Then you will implement the Liveness Analysis
+followed by the Dead Code Optimization. Finally, you will implement an
+optimization called CFG Simplify. Details about this project are in the
+[Sixth Project](./P6-Dataflow.ipynb) notebook.
 
-  - Livro "Practical Vim, second edition - Edit Text at the Speed of Thought" [The Pragmatic Bookshelf](https://pragprog.com/book/dnvim2/practical-vim-second-edition),
-  - Livro (online) sobre o editor Atom [Atom Flight Manual](http://flight-manual.atom.io/),
-  - Python 3 Official Documentation. (https://docs.python.org/3/). PFS license, GPL-compatible.
+## Seventh Project: LLVM IR Code Generation
 
+In this last project, you're going to translate the optimized SSA intermediate
+representation uCIR into LLVM IR, the intermediate representation of LLVM that
+is partially specified in [LLVM Primer](./doc/llvm_primer.ipynb). LLVM is a set
+of production-quality reusable libraries for building compilers. LLVM separates
+computer architectures from language issues and simplifies the design and
+portability of new compilers. Details about this project are in the
+[Seventh Project](./P7-LLVM-IR.ipynb) notebook.
+
+# Readings
+
+The course website is available at https://akluz.wordpress.com/mc921-2s20/ and
+is loaded with resources for this course. There, you will find the project
+schedule, the slides for this course, additional class notes and articles
+presented in class. It can also contain useful links to learn more about the
+tools we will use (e.g., Python Lex and Yacc), the Python programming language
+and compilers in general.
+
+# Assignments
+
+The final course grade  will be based on 7 programming projects, and 3 exams
+distributed as follows:
+
+    - Projects: 70% (10% each)
+    - Exams: 30% (10% each)
+
+Projects  will use the GitHub Classroom environment, where each project has an
+associated template repository. Students have to pull the assignment template
+locally to work, and push it for testing, and before the deadline for grading.
+The GitHub system will run the tests and automatically compute the assignment
+grade.
+
+All test inputs for the projects  are open, and there are no closed tests. The
+correct output for each test is open, and their evaluation will take into
+consideration not only execution correctness but also performance.
+
+GitHub will automatically close the submission system after each project
+deadline, and there will be no extensions. Hence, we strongly recommend that the
+student submit its work even if the testing is incomplete.
+
+# Collaboration policy
+
+Projects are individual assignments. Students can collaborate  with the goals of
+understanding and discussing the assignment solution. Nevertheless, code sharing
+and copying are not allowed, and will be considered fraud.
+
+Exams are individual assignments, and collaboration for their execution is not
+permitted. Any violation will be considered fraud.
+
+Frauds  will not be accepted, G = 0.0  will be assigned to everyone involved,
+and the case will be brought to the Undergraduate Dean.
